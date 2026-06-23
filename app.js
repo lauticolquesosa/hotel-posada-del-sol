@@ -217,10 +217,19 @@
   function setupImgReveal() {
     var imgs = root.querySelectorAll('.reveal-img');
     if (!imgs.length) return;
-    if (reduce) {
+    if (reduce || !('IntersectionObserver' in window)) {
       imgs.forEach(function (el) { el.classList.add('is-revealed'); });
       return;
     }
+    // red de seguridad: si algo falla, revelar todo al cargar la página
+    window.addEventListener('load', function () {
+      setTimeout(function () {
+        imgs.forEach(function (el) {
+          var r = el.getBoundingClientRect();
+          if (r.top < window.innerHeight && r.bottom > 0) el.classList.add('is-revealed');
+        });
+      }, 1200);
+    });
     var io = new IntersectionObserver(function (entries) {
       entries.forEach(function (en) {
         if (en.isIntersecting) {
@@ -375,6 +384,7 @@
 
   /* ---------- init ---------- */
   function init() {
+    document.documentElement.classList.add('js-anim');
     if ($('guestsRef')) $('guestsRef').value = '2';
     wireActions();
     setupHover();

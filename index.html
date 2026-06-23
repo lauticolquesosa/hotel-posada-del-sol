@@ -63,10 +63,10 @@
   input,select,button,textarea{font-family:inherit}
   input[type=date]::-webkit-calendar-picker-indicator{cursor:pointer;opacity:.6}
   /* ===== image reveal on scroll (estilo web real: wipe + zoom, easeOutExpo) ===== */
-  .reveal-img{clip-path:inset(0 0 0 100%);transition:clip-path 1.5s cubic-bezier(.19,1,.22,1) .15s}
-  .reveal-img.is-revealed{clip-path:inset(0 0 0 0)}
-  .reveal-img .zoom{transform:scale(1.18);transition:transform 1.8s cubic-bezier(.19,1,.22,1) .1s}
-  .reveal-img.is-revealed .zoom{transform:scale(1)}
+  html.js-anim .reveal-img{clip-path:inset(0 0 0 100%);transition:clip-path 1.5s cubic-bezier(.19,1,.22,1) .15s}
+  html.js-anim .reveal-img.is-revealed{clip-path:inset(0 0 0 0)}
+  html.js-anim .reveal-img .zoom{transform:scale(1.18);transition:transform 1.8s cubic-bezier(.19,1,.22,1) .1s}
+  html.js-anim .reveal-img.is-revealed .zoom{transform:scale(1)}
   @media (prefers-reduced-motion: reduce){
     *{animation:none!important}
     .reveal-img{clip-path:none!important;transition:none!important}
