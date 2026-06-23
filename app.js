@@ -337,27 +337,35 @@
     return out;
   }
 
+  // aplica estilos guardando el valor original inline, y los restaura al salir
+  function bindStateStyles(el, decls) {
+    var orig = {};
+    decls.forEach(function (d) { orig[d[0]] = el.style.getPropertyValue(d[0]); });
+    var on = function () { decls.forEach(function (d) { el.style.setProperty(d[0], d[1]); }); };
+    var off = function () {
+      decls.forEach(function (d) {
+        if (orig[d[0]]) el.style.setProperty(d[0], orig[d[0]]);
+        else el.style.removeProperty(d[0]);
+      });
+    };
+    return { on: on, off: off };
+  }
+
   function setupHover() {
     root.querySelectorAll('[data-hover]').forEach(function (el) {
-      var decls = parseDecls(el.getAttribute('data-hover'));
-      el.addEventListener('mouseenter', function () {
-        decls.forEach(function (d) { el.style.setProperty(d[0], d[1]); });
-      });
-      el.addEventListener('mouseleave', function () {
-        decls.forEach(function (d) { el.style.removeProperty(d[0]); });
-      });
+      var s = bindStateStyles(el, parseDecls(el.getAttribute('data-hover')));
+      el.addEventListener('mouseenter', s.on);
+      el.addEventListener('mouseleave', s.off);
+      // si el cursor se va de la página o el elemento pierde foco, también restaura
+      el.addEventListener('blur', s.off);
     });
   }
 
   function setupFocus() {
     root.querySelectorAll('[data-focus]').forEach(function (el) {
-      var decls = parseDecls(el.getAttribute('data-focus'));
-      el.addEventListener('focus', function () {
-        decls.forEach(function (d) { el.style.setProperty(d[0], d[1]); });
-      });
-      el.addEventListener('blur', function () {
-        decls.forEach(function (d) { el.style.removeProperty(d[0]); });
-      });
+      var s = bindStateStyles(el, parseDecls(el.getAttribute('data-focus')));
+      el.addEventListener('focus', s.on);
+      el.addEventListener('blur', s.off);
     });
   }
 
